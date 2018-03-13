@@ -19,8 +19,9 @@ public class SignUpActivity extends AppCompatActivity {
     EditText input_name, input_age, input_email;
     RadioGroup radioGroup;
     Button create_account;
-    TextView link_login;
+    TextView link_login, tv;
     RadioButton radioButton;
+    int output = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,32 +45,32 @@ public class SignUpActivity extends AppCompatActivity {
         String name = input_name.getText().toString();
         String email = input_email.getText().toString();
         String age = input_age.getText().toString();
-        String gender = null;
+        //String gender = null;
         int selectedId = radioGroup.getCheckedRadioButtonId();
         radioButton = findViewById(selectedId);
-        if (radioButton.getText().equals("Male")){
-            gender = "M";
-        }else{
-            gender = "F";
-        }
 
+        String status = "SignUp";
+        output = 0;
+        new DatabaseCustomer(getApplicationContext(), tv).execute(status, name, age, String.valueOf(radioButton.getText()), email);
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
 
-
-                        ////CHECK CONNECTION RESULT and DO WHAT is Predered
-                        onSignupSuccess();
-                        progressDialog.dismiss();
+                        output = Integer.parseInt(tv.getText().toString());
+                        if (output > 0) {
+                            // On complete call either onLoginSuccess or onLoginFailed
+                            ////CHECK CONNECTION RESULT and DO WHAT is Predered
+                            onSignupSuccess();
+                            progressDialog.dismiss();
+                        }else {
+                            //either the entered username or password doesnt match
+                            onSignupFailed();
+                            progressDialog.dismiss();
+                        }
                     }
                 }, 3000);
 
     }
-
-
-
-
 
 
     private void init() {
@@ -78,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
         input_email = findViewById(R.id.input_email);
         radioGroup = findViewById(R.id.radioGroupGender);
         create_account = findViewById(R.id.btn_signup);
+        tv = findViewById(R.id.signupStatus);
         link_login = findViewById(R.id.link_login);
         makeTextViewHyperlink(link_login);
     }

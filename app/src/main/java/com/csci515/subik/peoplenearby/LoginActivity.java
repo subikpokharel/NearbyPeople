@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,22 +19,24 @@ import com.csci515.subik.peoplenearby.myApplication.MyApplication;
 public class LoginActivity extends AppCompatActivity {
 
     EditText editEmail;
+    TextView tv;
     Button btnLogin;
     TextView link_signup;
     private static final int REQUEST_SIGNUP = 0;
     MyApplication myApplication;
+    int cus_id = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
-        editEmail.setText("admin@und.edu");
     }
 
     private void init() {
         editEmail = findViewById(R.id.input_email);
         btnLogin = findViewById(R.id.btn_login);
+        tv = findViewById(R.id.cusId);
         myApplication = (MyApplication) getApplication();
         link_signup =  findViewById(R.id.link_signup);
         makeTextViewHyperlink(link_signup);
@@ -76,11 +79,16 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
         final String email = editEmail.getText().toString();
 
+        cus_id = 0;
+        String status = "Login";
+
+        new DatabaseCustomer(getApplicationContext(), tv).execute(status, email);
+
         new android.os.Handler().postDelayed(new Runnable() {
             public void run() {
 
-                if (email.equals("admin@und.edu")) {
-
+                cus_id = Integer.parseInt(tv.getText().toString());
+               if (cus_id > 0) {
                     //If the entered password is the same that is stored in the database
                     // Login is Successful
                     onLoginSuccess();
@@ -93,20 +101,17 @@ public class LoginActivity extends AppCompatActivity {
                     btnLogin.setEnabled(true);
                 }
             }
-        }, 1000);
-
-
+        }, 3000);
     }
 
     private void onLoginSuccess() {
         btnLogin.setEnabled(true);
         //Get the email and name of the user
         String email = editEmail.getText().toString();
-        int id = 0;
 
         Intent intent = new Intent(LoginActivity.this, HomePageActivity.class);
         myApplication.saveToken("EmailS",email);
-        myApplication.saveToken("Id", String.valueOf(id));
+        myApplication.saveToken("Id", String.valueOf(cus_id));
         startActivity(intent);
     }
 
