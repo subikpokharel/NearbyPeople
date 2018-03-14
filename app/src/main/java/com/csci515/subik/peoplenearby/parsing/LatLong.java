@@ -6,13 +6,14 @@ package com.csci515.subik.peoplenearby.parsing;
 
 public class LatLong {
     int id, cus_id;
-    String latitude, longitude;
+    String latitude, longitude, name;
 
-    public LatLong(int id, int cus_id, String latitude, String longitude) {
+    public LatLong(int id, int cus_id, String latitude, String longitude, String name) {
         this.id = id;
         this.cus_id = cus_id;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.name = name;
     }
 
     public int getId() {
@@ -45,5 +46,13 @@ public class LatLong {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

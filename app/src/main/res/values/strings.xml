@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">PeopleNearby</string>
-    <string name="google_map_key" translatable="false" >AIzaSyAooxlSmJjEa5rHL3BcFD6FxZC5-u1fB3k</string>
-    <string name="google_web_key" translatable="false" >AIzaSyAdvBsMAaOMnzRC21wiSXWehbPSphcNUqE</string>
-
-
-
+    <string name="google_map_key" translatable="false">AIzaSyAooxlSmJjEa5rHL3BcFD6FxZC5-u1fB3k</string>
+    <string name="google_web_key" translatable="false">AIzaSyAdvBsMAaOMnzRC21wiSXWehbPSphcNUqE</string>
 
 
     <string name="onStartWait">Please wait while we connect you&#8230;</string>

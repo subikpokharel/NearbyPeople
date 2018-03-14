@@ -1,6 +1,11 @@
 package com.csci515.subik.peoplenearby;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -25,6 +30,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -48,10 +54,12 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
     MyApplication myApplication;
     String user_id;
     TextView tv;
+    static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) throws SecurityException {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        context = HomePageActivity.this;
         myApplication = (MyApplication) getApplication();
         user_id = myApplication.getSavedValue("Id");
         //Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_SHORT).show();
@@ -157,7 +165,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                     sb.append( line );
                     break;
                 }
-                Log.d("Output Json: ", sb.toString());
+                //Log.d("Output Json: ", sb.toString());
                 return sb.toString( );
             }catch (Exception e){
                 return new String( "Exception while connecting: " + e.getMessage( ) );
@@ -181,7 +189,8 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                     int cus_id = Integer.parseInt(jsonObject.optString("CusId"));
                     String latitude = jsonObject.optString("Latitude");
                     String longitude = jsonObject.optString("Longitude");
-                    mPeoplePosition.add(new LatLong(id, cus_id,latitude, longitude));
+                    String name = jsonObject.optString("Name");
+                    mPeoplePosition.add(new LatLong(id, cus_id,latitude, longitude, name));
 
                     //    Toast.makeText(GroceryJson.this,  groceryArrayList+ "  Clicked Glocery", Toast.LENGTH_LONG).show();
                 }
@@ -198,15 +207,64 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 MarkerOptions markerOptions = new MarkerOptions();
                 double lat = Double.parseDouble(mPeoplePosition.get(i).getLatitude());
                 double lng = Double.parseDouble(mPeoplePosition.get(i).getLongitude());
-                String placeName = String.valueOf(mPeoplePosition.get(i).getId());
-                String vicinity = String.valueOf(mPeoplePosition.get(i).getCus_id());
+                String name = String.valueOf(mPeoplePosition.get(i).getName());
+                String cus_id = String.valueOf(mPeoplePosition.get(i).getCus_id());
                 LatLng latLng = new LatLng(lat, lng);
                 markerOptions.position(latLng);
-                markerOptions.title(placeName);
-                markerOptions.snippet(vicinity);
+                markerOptions.title(name);
+                markerOptions.snippet(cus_id);
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 mGoogleMap.addMarker(markerOptions);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                Log.d("LATLANG: ", String.valueOf(lat)+" "+String.valueOf(lng));
+
+                mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
+                {
+
+                    @Override
+                    public boolean onMarkerClick(final Marker arg0) {
+                        //if(arg0.getTitle().equals("Current Location")){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("You are about to set an Appointment with...");
+                            // Setting Dialog Message
+                            builder.setMessage(arg0.getTitle());
+                            // Setting Positive "Yes" Btn
+                            builder.setPositiveButton("Go Ahead", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    final ProgressDialog progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
+                                    progressDialog.setIndeterminate(true);
+                                    progressDialog.setMessage("Fetching Data of "+arg0.getTitle()+"...");
+                                    progressDialog.show();
+                                    new android.os.Handler().postDelayed(new Runnable() {
+                                        public void run() {
+                                            Intent intent = new Intent(context, GetNearbyPlacesActivity.class);
+                                            intent.putExtra("GoingOutWithID", arg0.getSnippet());
+                                            intent.putExtra("GoingOutWithName", arg0.getTitle());
+                                            context.startActivity(intent);
+                                            Toast.makeText(context, "You will be out...", Toast.LENGTH_LONG).show();
+                                            progressDialog.dismiss();
+                                        }
+                                    }, 1000);
+
+                                }
+                            });
+
+                            // Setting Negative "NO" Btn
+                            builder.setNegativeButton("Discard",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(context, "You clicked on Discard", Toast.LENGTH_SHORT).show();
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            // Showing Alert Dialog
+                            builder.show();
+                        //}
+                        //Log.d("You clicked: ", arg0.getSnippet());
+                        return true;
+                    }
+                });
+                //Log.d("LATLANG: ", String.valueOf(lat)+" "+String.valueOf(lng));
             }
         }
     }
