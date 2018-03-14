@@ -40,14 +40,15 @@ public class DatabaseCustomer extends AsyncTask<String, Void, String> {
             conn.setDoOutput( true );
             String data = null;
             if (args[0].equals("Login")){
-                String email = args[1];
+                //String email = args[1];
                 data = URLEncoder.encode( "email", "UTF-8" ) + "=";
                 data += URLEncoder.encode( args[1],   "UTF-8" ) + "&";
                 data += URLEncoder.encode( "key", "UTF-8" ) + "=";
                 data += URLEncoder.encode( args[0],   "UTF-8" );
             }
-            else if (args[0].equals("SignUp")){
 
+
+            else if (args[0].equals("SignUp")){
                 data = URLEncoder.encode( "name", "UTF-8" ) + "=";
                 data += URLEncoder.encode( args[1],   "UTF-8" ) + "&";
                 data += URLEncoder.encode( "age", "UTF-8" ) + "=";
@@ -56,6 +57,17 @@ public class DatabaseCustomer extends AsyncTask<String, Void, String> {
                 data += URLEncoder.encode( args[3],   "UTF-8" )+ "&";
                 data += URLEncoder.encode( "email", "UTF-8" ) + "=";
                 data += URLEncoder.encode( args[4],   "UTF-8" )+ "&";
+                data += URLEncoder.encode( "key", "UTF-8" ) + "=";
+                data += URLEncoder.encode( args[0],   "UTF-8" );
+            }
+
+            else if (args[0].equals("insertLatLong")){
+                data = URLEncoder.encode( "latitude", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[1],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "longitude", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[2],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "id", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[3],   "UTF-8" ) + "&";
                 data += URLEncoder.encode( "key", "UTF-8" ) + "=";
                 data += URLEncoder.encode( args[0],   "UTF-8" );
             }

@@ -31,12 +31,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
+        editEmail.setText("sami@und.edu");
     }
 
     private void init() {
         editEmail = findViewById(R.id.input_email);
         btnLogin = findViewById(R.id.btn_login);
         tv = findViewById(R.id.cusId);
+        tv.setText("0");
         myApplication = (MyApplication) getApplication();
         link_signup =  findViewById(R.id.link_signup);
         makeTextViewHyperlink(link_signup);
