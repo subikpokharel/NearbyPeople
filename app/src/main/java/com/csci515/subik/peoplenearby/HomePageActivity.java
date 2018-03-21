@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.csci515.subik.peoplenearby.myApplication.MyApplication;
+import com.csci515.subik.peoplenearby.parsing.Customer;
 import com.csci515.subik.peoplenearby.parsing.LatLong;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -49,6 +50,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
 
     static GoogleMap mGoogleMap;
     static ArrayList<LatLong> mPeoplePosition;
+    static ArrayList<Customer> mPeople;
     double mLatitude  = 0;
     double mLongitude = 0;
     MyApplication myApplication;
@@ -165,7 +167,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                     sb.append( line );
                     break;
                 }
-                //Log.d("Output Json: ", sb.toString());
+                Log.d("Output Json: ", sb.toString());
                 return sb.toString( );
             }catch (Exception e){
                 return new String( "Exception while connecting: " + e.getMessage( ) );
@@ -181,6 +183,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 JSONObject jsonRootObj = new JSONObject(result);
                 JSONArray people = jsonRootObj.getJSONArray("people");
                 mPeoplePosition = new ArrayList<>(people.length());
+                mPeople = new ArrayList<>(people.length());
 
                 for (int i = 0; i < people.length(); i++) {
                     JSONObject jsonObject = people.getJSONObject(i);
@@ -190,28 +193,36 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                     String latitude = jsonObject.optString("Latitude");
                     String longitude = jsonObject.optString("Longitude");
                     String name = jsonObject.optString("Name");
-                    mPeoplePosition.add(new LatLong(id, cus_id,latitude, longitude, name));
+                    String age = jsonObject.optString("Age");
+                    String gender = jsonObject.optString("Gender");
+                    String email = jsonObject.optString("Email");
+                    mPeoplePosition.add(new LatLong(id, cus_id,latitude, longitude));
+                    //Log.d("name: ", name);
+                    mPeople.add(new Customer(cus_id,Integer.parseInt(age), name, gender, email));
 
                     //    Toast.makeText(GroceryJson.this,  groceryArrayList+ "  Clicked Glocery", Toast.LENGTH_LONG).show();
                 }
-                drawPeople(mPeoplePosition);
+                drawPeople(mPeoplePosition, mPeople);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        private void drawPeople(ArrayList<LatLong> mPeoplePosition) {
+        private void drawPeople(ArrayList<LatLong> mPeoplePosition, ArrayList<Customer> mPeople) {
             //Log.d("LATLANG: ", String.valueOf(mPeoplePosition.size()));
             for (int i = 0; i < mPeoplePosition.size(); i++) {
                 MarkerOptions markerOptions = new MarkerOptions();
                 double lat = Double.parseDouble(mPeoplePosition.get(i).getLatitude());
                 double lng = Double.parseDouble(mPeoplePosition.get(i).getLongitude());
-                String name = String.valueOf(mPeoplePosition.get(i).getName());
+                String name = String.valueOf(mPeople.get(i).getName());
+                String age = String.valueOf(mPeople.get(i).getAge());
+                String gender = String.valueOf(mPeople.get(i).getGender());
                 String cus_id = String.valueOf(mPeoplePosition.get(i).getCus_id());
                 LatLng latLng = new LatLng(lat, lng);
+                String title = "Name: "+name + "\nAge: "+age+"\nGender: "+gender;
                 markerOptions.position(latLng);
-                markerOptions.title(name);
+                markerOptions.title(title);
                 markerOptions.snippet(cus_id);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 mGoogleMap.addMarker(markerOptions);
@@ -232,15 +243,15 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
 
                                     final ProgressDialog progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
                                     progressDialog.setIndeterminate(true);
-                                    progressDialog.setMessage("Fetching Data of "+arg0.getTitle()+"...");
+                                    progressDialog.setMessage("Fetching Resturants near by...");
                                     progressDialog.show();
                                     new android.os.Handler().postDelayed(new Runnable() {
                                         public void run() {
                                             Intent intent = new Intent(context, GetNearbyPlacesActivity.class);
                                             intent.putExtra("GoingOutWithID", arg0.getSnippet());
-                                            intent.putExtra("GoingOutWithName", arg0.getTitle());
+                                            intent.putExtra("GoingOutWithDetails", arg0.getTitle());
                                             context.startActivity(intent);
-                                            Toast.makeText(context, "You will be out...", Toast.LENGTH_LONG).show();
+                                            //Toast.makeText(context, "You will be out...", Toast.LENGTH_LONG).show();
                                             progressDialog.dismiss();
                                         }
                                     }, 1000);
