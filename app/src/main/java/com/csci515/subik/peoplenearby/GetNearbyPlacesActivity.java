@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,6 +42,9 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
 
     GoogleMap mGoogleMap;
     Context context;
+    String[] data;
+    static String name, gender, age, cus_id;
+    static double destination_lat, destination_long;
 
     //Intent has some values
 
@@ -48,6 +52,14 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) throws SecurityException {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_nearby_places);
+        Intent intent = getIntent();
+        cus_id = intent.getStringExtra("GoingOutWithID");
+        String details = intent.getStringExtra("GoingOutWithDetails");
+        data = details.split("\n");
+        //Toast.makeText(getApplicationContext(), String.valueOf(intent), Toast.LENGTH_LONG);
+        name = data[0].substring(data[0].lastIndexOf(": ")+2);
+        age = data[1].substring(data[1].lastIndexOf(": ")+2);
+        gender = data[2].substring(data[2].lastIndexOf(": ")+2);
         context = GetNearbyPlacesActivity.this;
         // Getting Google Play availability status
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
@@ -195,6 +207,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
                 markerOptions.position(latLng);
                 markerOptions.title(placeName);
                 markerOptions.snippet(vicinity);
+                //Log.d("LatLong: ", String.valueOf(latLng));
                 //markerOptions.title(placeName + " : " + vicinity);
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 mGoogleMap.addMarker(markerOptions);
@@ -213,18 +226,26 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
                         builder.setTitle("Resturant Description: ");
                         // Setting Dialog Message
                         builder.setMessage("Name: "+arg0.getTitle()+"\nLocation: "+arg0.getSnippet());
+                        //+"\nLatLng: "+arg0.getPosition()
+                        destination_lat = arg0.getPosition().latitude;
+                        destination_long = arg0.getPosition().longitude;
                         // Setting Positive "Yes" Btn
                         builder.setPositiveButton("Go Ahead", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 final ProgressDialog progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
                                 progressDialog.setIndeterminate(true);
-                                progressDialog.setMessage("Fetching Data of "+arg0.getTitle()+"...");
+                                progressDialog.setMessage("Please Wait...");
                                 progressDialog.show();
                                 new android.os.Handler().postDelayed(new Runnable() {
                                     public void run() {
 
-                                        Toast.makeText(context, "You will be out...", Toast.LENGTH_LONG).show();
+                                        String[] array = {cus_id, name, age, gender, String.valueOf(destination_lat),
+                                                String.valueOf(destination_long), arg0.getTitle(), arg0.getSnippet()};
+                                        Intent intent = new Intent(context, SendRequestActivity.class);
+                                        intent.putExtra("Array", array);
+                                        context.startActivity(intent);
+                                        //Toast.makeText(context, "Notification Sent...", Toast.LENGTH_LONG).show();
                                         progressDialog.dismiss();
                                     }
                                 }, 1000);

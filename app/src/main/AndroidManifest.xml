@@ -38,7 +38,8 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/google_map_key" />
 
-        <activity android:name=".GetNearbyPlacesActivity"></activity>
+        <activity android:name=".GetNearbyPlacesActivity" />
+        <activity android:name=".SendRequestActivity"></activity>
     </application>
 
 </manifest>

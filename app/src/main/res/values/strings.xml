@@ -14,5 +14,10 @@
     <string name="already_member">Already a member? Login</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="gender">Gender:  </string>
+    <string name="gender">Gender  </string>
+    <string name="confirmation_page">Confirmation Page</string>
+    <string name="destinaton">Destination</string>
+    <string name="address">Address</string>
+    <string name="confirm">Confirm</string>
+    <string name="setTime">Set a Time</string>
 </resources>
