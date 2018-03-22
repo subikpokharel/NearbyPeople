@@ -20,4 +20,6 @@
     <string name="address">Address</string>
     <string name="confirm">Confirm</string>
     <string name="setTime">Set a Time</string>
+
+    <string name="appointments">My Appointments</string>
 </resources>

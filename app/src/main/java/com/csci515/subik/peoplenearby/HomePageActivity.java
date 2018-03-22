@@ -1,5 +1,6 @@
 package com.csci515.subik.peoplenearby;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
