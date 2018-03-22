@@ -5,15 +5,19 @@ package com.csci515.subik.peoplenearby.parsing;
  */
 
 public class Customer {
-    int cus_id, age;
+    int cus_id, age,status;
     String name, gender, email;
 
-    public Customer(int cus_id, int age, String name, String gender, String email) {
+
+
+    public Customer(int cus_id, int age, String name, String gender, String email, int status) {
         this.cus_id = cus_id;
         this.age = age;
         this.name = name;
         this.gender = gender;
         this.email = email;
+        this.status = status;
+
     }
 
     public Customer(String name){
@@ -58,5 +62,13 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

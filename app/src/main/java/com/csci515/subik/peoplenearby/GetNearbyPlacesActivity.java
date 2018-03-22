@@ -230,7 +230,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
                         destination_lat = arg0.getPosition().latitude;
                         destination_long = arg0.getPosition().longitude;
                         // Setting Positive "Yes" Btn
-                        builder.setPositiveButton("Go Ahead", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton("Send Request", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 final ProgressDialog progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);

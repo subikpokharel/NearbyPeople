@@ -196,9 +196,10 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                     String age = jsonObject.optString("Age");
                     String gender = jsonObject.optString("Gender");
                     String email = jsonObject.optString("Email");
+                    int status = Integer.parseInt(jsonObject.optString("Status"));
                     mPeoplePosition.add(new LatLong(id, cus_id,latitude, longitude));
                     //Log.d("name: ", name);
-                    mPeople.add(new Customer(cus_id,Integer.parseInt(age), name, gender, email));
+                    mPeople.add(new Customer(cus_id,Integer.parseInt(age), name, gender, email, status));
 
                     //    Toast.makeText(GroceryJson.this,  groceryArrayList+ "  Clicked Glocery", Toast.LENGTH_LONG).show();
                 }
@@ -219,12 +220,22 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 String age = String.valueOf(mPeople.get(i).getAge());
                 String gender = String.valueOf(mPeople.get(i).getGender());
                 String cus_id = String.valueOf(mPeoplePosition.get(i).getCus_id());
+                final int status = mPeople.get(i).getStatus();
                 LatLng latLng = new LatLng(lat, lng);
-                String title = "Name: "+name + "\nAge: "+age+"\nGender: "+gender;
-                markerOptions.position(latLng);
-                markerOptions.title(title);
-                markerOptions.snippet(cus_id);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                if (status == 0){
+                    String title = "Name: "+name + "\nAge: "+age+"\nGender: "+gender;
+                    markerOptions.position(latLng);
+                    markerOptions.title(title);
+                    markerOptions.snippet(cus_id);
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                }else {
+                    String title = "Status: BOOKED \nSeems like the person is going out with someone else. \nSorry for the inconvenience.";
+                    markerOptions.position(latLng);
+                    markerOptions.title(title);
+                    markerOptions.snippet("Booked");
+                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
                 mGoogleMap.addMarker(markerOptions);
 
                 mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
@@ -238,7 +249,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                             // Setting Dialog Message
                             builder.setMessage(arg0.getTitle());
                             // Setting Positive "Yes" Btn
-                            builder.setPositiveButton("Go Ahead", new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton("Select Resturant", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
 
                                     final ProgressDialog progressDialog = new ProgressDialog(context, R.style.AppTheme_Dark_Dialog);
@@ -247,10 +258,16 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                                     progressDialog.show();
                                     new android.os.Handler().postDelayed(new Runnable() {
                                         public void run() {
-                                            Intent intent = new Intent(context, GetNearbyPlacesActivity.class);
-                                            intent.putExtra("GoingOutWithID", arg0.getSnippet());
-                                            intent.putExtra("GoingOutWithDetails", arg0.getTitle());
-                                            context.startActivity(intent);
+                                            String status = arg0.getSnippet();
+                                            if (!status.equals("Booked")){
+                                                Intent intent = new Intent(context, GetNearbyPlacesActivity.class);
+                                                intent.putExtra("GoingOutWithID", arg0.getSnippet());
+                                                intent.putExtra("GoingOutWithDetails", arg0.getTitle());
+                                                context.startActivity(intent);
+                                            }else {
+                                                Toast.makeText(context, "Sorry we cannot process your request at this moment...", Toast.LENGTH_LONG).show();
+                                            }
+
                                             //Toast.makeText(context, "You will be out...", Toast.LENGTH_LONG).show();
                                             progressDialog.dismiss();
                                         }

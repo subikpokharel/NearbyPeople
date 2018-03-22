@@ -72,6 +72,25 @@ public class DatabaseCustomer extends AsyncTask<String, Void, String> {
                 data += URLEncoder.encode( args[0],   "UTF-8" );
             }
 
+            else if (args[0].equals("insertAppointment")){
+                data = URLEncoder.encode( "latitude", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[4],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "longitude", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[5],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "from_id", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[1],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "to_id", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[2],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "time", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[3],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "name", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[6],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "address", "UTF-8" ) + "=";
+                data += URLEncoder.encode(args[7],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "key", "UTF-8" ) + "=";
+                data += URLEncoder.encode( args[0],   "UTF-8" );
+            }
+
             Log.d("data sending: ", data);
             OutputStreamWriter wr = new OutputStreamWriter(
                     conn.getOutputStream( ) );
@@ -105,6 +124,14 @@ public class DatabaseCustomer extends AsyncTask<String, Void, String> {
         }
 
         else if (status.equals("SignUp")){
+            if (!result.equals("failed") ){
+                this.cus_id.setText(result);
+            }else{
+                this.cus_id.setText("0");
+            }
+        }
+
+        else if (status.equals("insertAppointment")){
             if (!result.equals("failed") ){
                 this.cus_id.setText(result);
             }else{
