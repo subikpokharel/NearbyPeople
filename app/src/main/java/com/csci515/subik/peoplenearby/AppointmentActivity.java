@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.csci515.subik.peoplenearby.adapter.AppointmentAdapter;
 import com.csci515.subik.peoplenearby.myApplication.MyApplication;
 import com.csci515.subik.peoplenearby.parsing.Appointment;
 
@@ -62,6 +63,7 @@ public class AppointmentActivity extends AppCompatActivity {
 
                 case R.id.tvSent:
 
+                    //listView.removeAllViews();
                     request_sent.setTextColor(getResources().getColor(R.color.black));
                     request_received.setTextColor(getResources().getColor(R.color.colorIcons));
                     request_sent.setTypeface(Typeface.DEFAULT_BOLD);
@@ -73,6 +75,7 @@ public class AppointmentActivity extends AppCompatActivity {
 
                 case R.id.tvReceived:
 
+                    //listView.removeAllViews();
                     request_received.setTextColor(getResources().getColor(R.color.black));
                     request_sent.setTextColor(getResources().getColor(R.color.colorIcons));
                     request_received.setTypeface(Typeface.DEFAULT_BOLD);
@@ -97,13 +100,15 @@ public class AppointmentActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Do something after 5s = 5000ms
-                if (appointments.size() == 0){
-                    no_data.setVisibility(enable_view.VISIBLE);
-                    //Toast.makeText(AppointmentActivity.this, "Empty result", Toast.LENGTH_LONG).show();
-                }else{
-                    //Toast.makeText(AppointmentActivity.this, "Not Empty result", Toast.LENGTH_LONG).show();
+                Log.d("Data length: ", String.valueOf(appointments.size()));
+                if (appointments.size() != 0){
                     no_data.setVisibility(enable_view.GONE);
-                }
+                    AppointmentAdapter appointmentAdapter = new AppointmentAdapter(AppointmentActivity.this,R.layout.activity_container_appointment,appointments);
+                    listView.setAdapter(appointmentAdapter);
+                    //Toast.makeText(AppointmentActivity.this, "Empty result", Toast.LENGTH_LONG).show();
+                }else
+                    //Toast.makeText(AppointmentActivity.this, "Not Empty result", Toast.LENGTH_LONG).show();
+                    no_data.setVisibility(enable_view.VISIBLE);
             }
         }, 1500);
 
@@ -162,7 +167,7 @@ public class AppointmentActivity extends AppCompatActivity {
                     JSONObject jsonRootObj = new JSONObject(result);
                     JSONArray data = jsonRootObj.getJSONArray("details");
                     appointments = new ArrayList<>(data.length());
-
+                    //Log.d("Data length: ", String.valueOf(data.length()));
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject jsonObject = data.getJSONObject(i);
 
