@@ -30,8 +30,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".HomePageActivity"/>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".HomePageActivity" />
         <activity android:name=".SignUpActivity" />
 
         <meta-data
@@ -39,7 +39,8 @@
             android:value="@string/google_map_key" />
 
         <activity android:name=".GetNearbyPlacesActivity" />
-        <activity android:name=".SendRequestActivity"></activity>
+        <activity android:name=".SendRequestActivity" />
+        <activity android:name=".AppointmentActivity"></activity>
     </application>
 
 </manifest>
