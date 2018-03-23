@@ -6,4 +6,7 @@
     <color name="colorButton">#C2185B</color>
     <color name="black">#000000</color>
     <color name="colorIcons">#616161</color>
+    <color name="colorPending">#FFEB3B</color>
+    <color name="colorAccepted">#4CAF50</color>
+    <color name="colorAcceptReject">#FF5722</color>
 </resources>

@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -27,7 +30,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class AppointmentActivity extends AppCompatActivity {
+public class AppointmentActivity extends AppCompatActivity implements AppointmentAdapter.DataTransferInterface {
 
     TextView request_sent, request_received, no_data;
     ListView listView;
@@ -104,7 +107,7 @@ public class AppointmentActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Do something after 5s = 5000ms
-                Log.d("Data length: ", String.valueOf(appointments.size()));
+                //Log.d("Data length: ", String.valueOf(appointments.size()));
                 if (appointments.size() != 0){
                     no_data.setVisibility(enable_view.GONE);
                     listView.setVisibility(enable_view.VISIBLE);
@@ -121,6 +124,20 @@ public class AppointmentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void makeHyperlink(TextView textView) {
+        SpannableStringBuilder ssb = new SpannableStringBuilder( );
+        ssb.append( textView.getText( ) );
+        ssb.setSpan( new URLSpan("#"), 0, ssb.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE );
+        textView.setText( ssb, TextView.BufferType.SPANNABLE );
+    }
+
+    @Override
+    public void clickHyperlink(int cus_id, String job) {
+        Toast.makeText(getApplicationContext(), job, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), String.valueOf(cus_id), Toast.LENGTH_LONG).show();
+    }
 
 
     private static class GetAppointment extends AsyncTask<String, Void, String>{
@@ -186,8 +203,9 @@ public class AppointmentActivity extends AppCompatActivity {
                         String resturant_name = jsonObject.optString("Res_Name");
                         String resturant_address = jsonObject.optString("Address");
                         int status = Integer.parseInt(jsonObject.optString("Status"));
+                        int cus_id = Integer.parseInt(jsonObject.optString("CusId"));
 
-                        appointments.add(new Appointment(from_name, to_name, time, latitude, longitude, resturant_name, resturant_address, status));
+                        appointments.add(new Appointment(from_name, to_name, time, latitude, longitude, resturant_name, resturant_address, status, cus_id));
                     }
                 }
 

@@ -25,4 +25,7 @@
     <string name="nothingToShow">Sorry there are no requests to be shown at this moment.</string>
 
     <string name="appointments">My Appointments</string>
+    <string name="pending">Pending</string>
+    <string name="trackFriend">Track Friend</string>
+    <string name="acceptReject">Accept/Reject</string>
 </resources>

@@ -25,6 +25,8 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
     private LayoutInflater mlayoutInflater;
     private int resource;
     private String key;
+    String job = null;
+    DataTransferInterface dataTransferInterface;
 
     public AppointmentAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Appointment> objects, String key) {
         super(context, resource, objects);
@@ -33,6 +35,7 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
         this.mContext = context;
         mlayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.key = key;
+        this.dataTransferInterface = (DataTransferInterface) context;
     }
 
     @Override
@@ -43,10 +46,9 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Appointment appointment = getItem(position);
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        final Appointment appointment = getItem(position);
         final AppointmentAdapter.ViewHolder mViewHolder;
-        int i = 0;
 
         if (convertView == null) {
             convertView= mlayoutInflater.inflate(resource, parent, false);
@@ -56,30 +58,61 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
         } else {
             mViewHolder = (AppointmentAdapter.ViewHolder) convertView.getTag();
         }
-        i++;
-        //mViewHolder.tvSlNo.setText(i);
-        mViewHolder.tvFName.setText(appointment.getTo_name());
-        mViewHolder.tvTime.setText(appointment.getTime());
+        mViewHolder.tvId.setText(String.valueOf(appointment.getCus_id()));
+        mViewHolder.tvTime.setText(String.format("Time: %s",appointment.getTime()));
         mViewHolder.tvResturant.setText(appointment.getResturant_name());
         mViewHolder.tvAddress.setText(appointment.getResturant_address());
         if (key.equals("sent")){
+            mViewHolder.tvFName.setText(String.format("To: %s",appointment.getTo_name()));
             if (appointment.getStatus() == 0){
-                mViewHolder.tvStatus.setText("Pending");
+                mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.pending));
+                job = "pending";
             }else{
-                mViewHolder.tvStatus.setText("Accepted");
+                mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
+                mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
+                dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
+                job = "track";
+                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "track");
+
             }
         }else{
-            mViewHolder.tvStatus.setText("Accept/Reject");
+            mViewHolder.tvFName.setText(String.format("From: %s",appointment.getTo_name()));
+
+            if (appointment.getStatus() == 0) {
+                mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.acceptReject));
+                mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAcceptReject));
+                dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
+                job = "view";
+                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "view");
+            }
+            else {
+                mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
+                mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
+                dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
+                job = "track";
+                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "track");
+            }
+
         }
+
+
+        mViewHolder.tvStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //int pos = list.get(position);
+
+                dataTransferInterface.clickHyperlink(appointment.getCus_id(), job);
+            }
+        });
 
         return convertView;
     }
 
     private static class ViewHolder{
-        public TextView tvSlNo, tvFName, tvTime, tvResturant, tvAddress, tvStatus;
+        private TextView tvId, tvFName, tvTime, tvResturant, tvAddress, tvStatus;
 
-        public ViewHolder(View view){
-            //tvSlNo = view.findViewById(R.id.tvSlno);
+        private ViewHolder(View view){
+            tvId = view.findViewById(R.id.tvCusId);
             tvFName = view.findViewById(R.id.tvName);
             tvTime = view.findViewById(R.id.tvTime);
             tvResturant = view.findViewById(R.id.tvResName);
@@ -87,5 +120,10 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
             tvStatus = view.findViewById(R.id.tvStatus);
 
         }
+    }
+
+    public interface DataTransferInterface{
+        void makeHyperlink(TextView textView);
+        void clickHyperlink(int cus_id, String job);
     }
 }

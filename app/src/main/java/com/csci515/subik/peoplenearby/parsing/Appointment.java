@@ -7,9 +7,9 @@ package com.csci515.subik.peoplenearby.parsing;
 public class Appointment {
 
     private String from_name, to_name, time, latitude, longitude, resturant_name, resturant_address;
-    private int status;
+    private int status, cus_id;
 
-    public Appointment(String from_name, String to_name, String time, String latitude, String longitude, String resturant_name, String resturant_address, int status) {
+    public Appointment(String from_name, String to_name, String time, String latitude, String longitude, String resturant_name, String resturant_address, int status, int cus_id) {
         this.from_name = from_name;
         this.to_name = to_name;
         this.time = time;
@@ -18,6 +18,7 @@ public class Appointment {
         this.resturant_name = resturant_name;
         this.resturant_address = resturant_address;
         this.status = status;
+        this.cus_id = cus_id;
     }
 
     public String getFrom_name() {
@@ -82,5 +83,13 @@ public class Appointment {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getCus_id() {
+        return cus_id;
+    }
+
+    public void setCus_id(int cus_id) {
+        this.cus_id = cus_id;
     }
 }
