@@ -22,7 +22,7 @@
     <string name="setTime">Set a Time</string>
     <string name="sent">Request Sent</string>
     <string name="received">Request Received</string>
-    <string name="nothingToShow">Sorry there are no requests at this moment.</string>
+    <string name="nothingToShow">Sorry there are no requests to be shown at this moment.</string>
 
     <string name="appointments">My Appointments</string>
 </resources>
