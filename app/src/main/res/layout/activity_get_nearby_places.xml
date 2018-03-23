@@ -18,6 +18,7 @@
             android:layout_gravity="start|bottom"
             android:text="@string/appointments"
             android:textColor="@color/colorButton"
+            android:id="@+id/btnAppointment"
             android:padding="10dp" />
     </fragment>
 </RelativeLayout>

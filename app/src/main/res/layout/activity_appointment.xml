@@ -17,7 +17,7 @@
         android:weightSum="2">
 
         <TextView
-            android:id="@+id/customertxt"
+            android:id="@+id/tvSent"
             android:layout_width="0.0dip" android:layout_height="wrap_content"
             android:text="@string/sent"
             android:layout_weight="1.0"
@@ -29,7 +29,7 @@
             />
 
         <TextView
-            android:id="@+id/admintxt"
+            android:id="@+id/tvReceived"
             android:layout_width="0.0dip" android:layout_height="wrap_content"
             android:text="@string/received"
             android:layout_weight="1.0"

@@ -17,6 +17,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
     String user_id;
     TextView tv;
     static Context context;
+    Button viewAppointment;
     @Override
     protected void onCreate(Bundle savedInstanceState) throws SecurityException {
         super.onCreate(savedInstanceState);
@@ -67,6 +70,14 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
         user_id = myApplication.getSavedValue("Id");
         //Toast.makeText(getApplicationContext(), user_id, Toast.LENGTH_SHORT).show();
 
+        viewAppointment = findViewById(R.id.btnViewAppointment);
+        viewAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePageActivity.this, AppointmentActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Getting Google Play availability status
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());

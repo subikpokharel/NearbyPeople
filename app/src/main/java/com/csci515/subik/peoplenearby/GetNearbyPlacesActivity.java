@@ -13,6 +13,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -45,6 +47,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
     String[] data;
     static String name, gender, age, cus_id;
     static double destination_lat, destination_long;
+    Button btnAppointment;
 
     //Intent has some values
 
@@ -61,6 +64,16 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
         age = data[1].substring(data[1].lastIndexOf(": ")+2);
         gender = data[2].substring(data[2].lastIndexOf(": ")+2);
         context = GetNearbyPlacesActivity.this;
+
+        btnAppointment = findViewById(R.id.btnAppointment);
+        btnAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GetNearbyPlacesActivity.this, AppointmentActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // Getting Google Play availability status
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if (status != ConnectionResult.SUCCESS){
@@ -107,6 +120,8 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
 
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/" + output + "?" + parameters;
     }
+
+
 
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
@@ -274,4 +289,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
             }
         }  // End of onPostExecute
     }    // End of ParserTask
+
+
+
 }
