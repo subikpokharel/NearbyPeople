@@ -33,6 +33,7 @@ public class AppointmentActivity extends AppCompatActivity {
     ListView listView;
     MyApplication myApplication;
     View enable_view;
+    AppointmentAdapter appointmentAdapter = null;
     static ArrayList<Appointment> appointments = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,25 +63,27 @@ public class AppointmentActivity extends AppCompatActivity {
             switch (v.getId()){
 
                 case R.id.tvSent:
-
+                    //Toast.makeText(AppointmentActivity.this, appointmentAdapter.getCount(), Toast.LENGTH_LONG).show();
                     //listView.removeAllViews();
                     request_sent.setTextColor(getResources().getColor(R.color.black));
                     request_received.setTextColor(getResources().getColor(R.color.colorIcons));
                     request_sent.setTypeface(Typeface.DEFAULT_BOLD);
                     request_received.setTypeface(Typeface.DEFAULT);
                     no_data.setVisibility(v.GONE);
+                    listView.setVisibility(v.GONE);
                     getData("sent");
                     break;
 
 
                 case R.id.tvReceived:
-
+                    //Toast.makeText(AppointmentActivity.this, appointmentAdapter.getCount(), Toast.LENGTH_LONG).show();
                     //listView.removeAllViews();
                     request_received.setTextColor(getResources().getColor(R.color.black));
                     request_sent.setTextColor(getResources().getColor(R.color.colorIcons));
                     request_received.setTypeface(Typeface.DEFAULT_BOLD);
                     request_sent.setTypeface(Typeface.DEFAULT);
                     no_data.setVisibility(v.GONE);
+                    listView.setVisibility(v.GONE);
                     getData("received");
                     break;
             }
@@ -90,6 +93,7 @@ public class AppointmentActivity extends AppCompatActivity {
     private void getData(String key) {
 
         //String id = "6";
+        final String param = key;
         String id = myApplication.getSavedValue("Id");
         final GetAppointment appointment = new GetAppointment();
         appointment.execute(key, id);
@@ -103,12 +107,15 @@ public class AppointmentActivity extends AppCompatActivity {
                 Log.d("Data length: ", String.valueOf(appointments.size()));
                 if (appointments.size() != 0){
                     no_data.setVisibility(enable_view.GONE);
-                    AppointmentAdapter appointmentAdapter = new AppointmentAdapter(AppointmentActivity.this,R.layout.activity_container_appointment,appointments);
+                    listView.setVisibility(enable_view.VISIBLE);
+                    appointmentAdapter = new AppointmentAdapter(AppointmentActivity.this,R.layout.activity_container_appointment,appointments, param);
                     listView.setAdapter(appointmentAdapter);
                     //Toast.makeText(AppointmentActivity.this, "Empty result", Toast.LENGTH_LONG).show();
-                }else
+                }else {
                     //Toast.makeText(AppointmentActivity.this, "Not Empty result", Toast.LENGTH_LONG).show();
                     no_data.setVisibility(enable_view.VISIBLE);
+                    listView.setVisibility(enable_view.GONE);
+                }
             }
         }, 1500);
 
