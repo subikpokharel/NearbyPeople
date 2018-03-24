@@ -1,5 +1,10 @@
 package com.csci515.subik.peoplenearby;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -36,12 +41,14 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     ListView listView;
     MyApplication myApplication;
     View enable_view;
+    Context appContext;
     AppointmentAdapter appointmentAdapter = null;
     static ArrayList<Appointment> appointments = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment);
+        appContext = AppointmentActivity.this;
         init();
     }
 
@@ -107,15 +114,12 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             @Override
             public void run() {
                 // Do something after 5s = 5000ms
-                //Log.d("Data length: ", String.valueOf(appointments.size()));
                 if (appointments.size() != 0){
                     no_data.setVisibility(enable_view.GONE);
                     listView.setVisibility(enable_view.VISIBLE);
                     appointmentAdapter = new AppointmentAdapter(AppointmentActivity.this,R.layout.activity_container_appointment,appointments, param);
                     listView.setAdapter(appointmentAdapter);
-                    //Toast.makeText(AppointmentActivity.this, "Empty result", Toast.LENGTH_LONG).show();
                 }else {
-                    //Toast.makeText(AppointmentActivity.this, "Not Empty result", Toast.LENGTH_LONG).show();
                     no_data.setVisibility(enable_view.VISIBLE);
                     listView.setVisibility(enable_view.GONE);
                 }
@@ -134,9 +138,60 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     }
 
     @Override
-    public void clickHyperlink(int cus_id, String job) {
-        Toast.makeText(getApplicationContext(), job, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), String.valueOf(cus_id), Toast.LENGTH_LONG).show();
+    public void clickHyperlink(Appointment data, String job) {
+        /*Toast.makeText(getApplicationContext(), job, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), String.valueOf(cus_id), Toast.LENGTH_LONG).show();*/
+        if (job.equals("view")){
+            AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
+            builder.setTitle("Accept/Reject Request");
+            // Setting Dialog Message
+            builder.setMessage("Request from: "+data.getFrom_name()+"\n"+data.getResturant_name()+"\n"+data.getResturant_address());
+            builder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+
+                    final ProgressDialog progressDialog = new ProgressDialog(appContext, R.style.AppTheme_Dark_Dialog);
+                    progressDialog.setIndeterminate(true);
+                    progressDialog.setMessage("Please Wait...");
+                    progressDialog.show();
+                    new android.os.Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            //send to database
+                            //refresh this page
+                            Toast.makeText(appContext, "Notification Sent...", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                        }
+                    }, 1000);
+
+                }
+            });
+
+            // Setting Negative "NO" Btn
+            builder.setNegativeButton("Reject",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            final ProgressDialog progressDialog = new ProgressDialog(appContext, R.style.AppTheme_Dark_Dialog);
+                            progressDialog.setIndeterminate(true);
+                            progressDialog.setMessage("Please Wait...");
+                            progressDialog.show();
+                            new android.os.Handler().postDelayed(new Runnable() {
+                                public void run() {
+                                    //send to database
+                                    //refresh this page
+                                    Toast.makeText(appContext, "Request rejected...", Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
+                                }
+                            }, 1000);
+                        }
+                    });
+
+            // Showing Alert Dialog
+            builder.show();
+        }else if (job.equals("track")){
+            //send to tracking page with details of appointments
+            Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(),"Waiting for: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
+        }
     }
 
 

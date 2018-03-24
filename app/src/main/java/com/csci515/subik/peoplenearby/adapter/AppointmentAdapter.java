@@ -62,6 +62,8 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
         mViewHolder.tvTime.setText(String.format("Time: %s",appointment.getTime()));
         mViewHolder.tvResturant.setText(appointment.getResturant_name());
         mViewHolder.tvAddress.setText(appointment.getResturant_address());
+
+
         if (key.equals("sent")){
             mViewHolder.tvFName.setText(String.format("To: %s",appointment.getTo_name()));
             if (appointment.getStatus() == 0){
@@ -72,36 +74,29 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
                 job = "track";
-                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "track");
-
             }
         }else{
-            mViewHolder.tvFName.setText(String.format("From: %s",appointment.getTo_name()));
-
+            mViewHolder.tvFName.setText(String.format("From: %s",appointment.getFrom_name()));
             if (appointment.getStatus() == 0) {
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.acceptReject));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAcceptReject));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
                 job = "view";
-                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "view");
             }
             else {
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
                 job = "track";
-                //dataTransferInterface.clickHyperlink(appointment.getCus_id(), "track");
             }
-
         }
-
 
         mViewHolder.tvStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //int pos = list.get(position);
 
-                dataTransferInterface.clickHyperlink(appointment.getCus_id(), job);
+                dataTransferInterface.clickHyperlink(list.get(position), job);
             }
         });
 
@@ -124,6 +119,6 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
 
     public interface DataTransferInterface{
         void makeHyperlink(TextView textView);
-        void clickHyperlink(int cus_id, String job);
+        void clickHyperlink(Appointment data, String job);
     }
 }
