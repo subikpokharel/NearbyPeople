@@ -40,7 +40,10 @@
 
         <activity android:name=".GetNearbyPlacesActivity" />
         <activity android:name=".SendRequestActivity" />
-        <activity android:name=".AppointmentActivity"
+        <activity
+            android:name=".AppointmentActivity"
+            android:noHistory="true" />
+        <activity android:name=".TrackActivity"
             android:noHistory="true"/>
     </application>
 

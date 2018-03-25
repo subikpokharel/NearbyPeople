@@ -193,7 +193,17 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             builder.show();
         }else if (job.equals("track")){
             //send to tracking page with details of appointments
-            Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
+            //String id = myApplication.getSavedValue("Id");
+
+            Intent intent = new Intent(appContext, TrackActivity.class);
+            intent.putExtra("destination", data.toString());
+            intent.putExtra("friendId", String.valueOf(data.getCus_id()));
+            appContext.startActivity(intent);
+
+
+            //RequestHandler requestHandler = new RequestHandler();
+            //requestHandler.execute("Track", String.valueOf(data.getCus_id()), id, data.toString());
+            //Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getApplicationContext(),"Waiting for: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
         }
@@ -276,11 +286,19 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     }
 
     private static class RequestHandler extends AsyncTask<String, Void, String> {
+        /*String status = null;
+        String app = null;*/
         @Override
         protected String doInBackground(String... args) {
+            //status = args[0];
             String link = "http://undcemcs02.und.edu/~subik.pokharel/515/1/RequestHandler.php";
             String data = null;
             try {
+                /*if (args[0].equals("Track")){
+                    app = args[3];
+                    //Toast.makeText(appContext, app, Toast.LENGTH_LONG).show();
+                    //Log.d("Appointment: ", app);
+                }*/
                 // Connect to the server.
                 URL url = new URL( link );
                 URLConnection conn = url.openConnection( );
@@ -318,11 +336,21 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
        @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(s.equals("1")){
-                //Log.d("Query Success: ", s);
-                Intent intent = new Intent(appContext, AppointmentActivity.class);
+           if(s.equals("1")){
+               //Log.d("Query Success: ", s);
+               Intent intent = new Intent(appContext, AppointmentActivity.class);
+               appContext.startActivity(intent);
+           }
+            /*if (status.equals("Track")){
+                //Appointment appointment = app;
+                Intent intent = new Intent(appContext, TrackActivity.class);
+                intent.putExtra("JsonData", s);
+                intent.putExtra("destination", app);
                 appContext.startActivity(intent);
-            }
+            }else{
+
+            }*/
+
         }
     }
 }

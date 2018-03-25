@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -120,7 +121,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
         //setLatLong(mLatitude, mLongitude);
         new DatabaseCustomer(getApplicationContext(), tv).execute("insertLatLong", String.valueOf(mLatitude),
                 String.valueOf(mLongitude),user_id);
-        LatLng points = new LatLng(mLatitude, mLongitude);
+        final LatLng points = new LatLng(mLatitude, mLongitude);
         /*mGoogleMap.addMarker(new MarkerOptions().position(points)
                 .title("Current Location")
                 .snippet("You are around UND memorial union."));*/
@@ -129,8 +130,18 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 .radius(1)
                 .strokeColor(Color.RED)
                 .fillColor(Color.BLUE));*/
-        mGoogleMap.moveCamera( CameraUpdateFactory.newLatLng(points));
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 0.5s = 500ms
+                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLng(points));
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            }
+        }, 1000);
+
+
+
     }
 
 

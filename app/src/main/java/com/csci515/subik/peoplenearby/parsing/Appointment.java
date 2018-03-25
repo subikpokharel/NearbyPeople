@@ -92,4 +92,10 @@ public class Appointment {
     public void setCus_id(int cus_id) {
         this.cus_id = cus_id;
     }
+
+
+    @Override
+    public String toString() {
+        return latitude + '/' + longitude + '/' + resturant_name + '/' + resturant_address;
+    }
 }
