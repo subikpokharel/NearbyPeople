@@ -41,7 +41,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     ListView listView;
     MyApplication myApplication;
     View enable_view;
-    Context appContext;
+    static Context appContext;
     AppointmentAdapter appointmentAdapter = null;
     static ArrayList<Appointment> appointments = null;
     @Override
@@ -138,7 +138,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     }
 
     @Override
-    public void clickHyperlink(Appointment data, String job) {
+    public void clickHyperlink(final Appointment data, String job) {
         /*Toast.makeText(getApplicationContext(), job, Toast.LENGTH_LONG).show();
         Toast.makeText(getApplicationContext(), String.valueOf(cus_id), Toast.LENGTH_LONG).show();*/
         if (job.equals("view")){
@@ -176,6 +176,11 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                             new android.os.Handler().postDelayed(new Runnable() {
                                 public void run() {
                                     //send to database
+                                    String id = myApplication.getSavedValue("Id");
+                                    RequestHandler requestHandler = new RequestHandler();
+                                    requestHandler.execute("Reject", String.valueOf(data.getCus_id()), id );
+                                            //GetAppointment appointment = new GetAppointment();
+                                    //appointment.execute(key, id);
                                     //refresh this page
                                     Toast.makeText(appContext, "Request rejected...", Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
@@ -266,6 +271,61 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private static class RequestHandler extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... args) {
+            String link = "http://undcemcs02.und.edu/~subik.pokharel/515/1/RequestHandler.php";
+            String data = null;
+            try {
+                // Connect to the server.
+                URL url = new URL( link );
+                URLConnection conn = url.openConnection( );
+                conn.setDoOutput( true );
+
+                switch (args[0]){
+                    case "Reject":
+                        data = URLEncoder.encode( "key", "UTF-8" ) + "=";
+                        data += URLEncoder.encode( args[0],   "UTF-8" ) + "&";
+                        data += URLEncoder.encode( "from", "UTF-8" ) + "=";
+                        data += URLEncoder.encode( args[1],   "UTF-8" ) + "&";
+                        data += URLEncoder.encode( "to", "UTF-8" ) + "=";
+                        data += URLEncoder.encode( args[2],   "UTF-8" );
+
+                    case "Accept":
+                }
+
+                OutputStreamWriter wr = new OutputStreamWriter(
+                        conn.getOutputStream( ) );
+                wr.write( data );
+                wr.flush( );
+                // Read server response.
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader( conn.getInputStream( ) ));
+                StringBuilder sb = new StringBuilder( );
+                String      line;
+                while (( line = reader.readLine( ) ) != null ) {
+                    sb.append( line );
+                    break;
+                }
+                Log.d("Output: ", sb.toString());
+                return sb.toString( );
+            }catch (Exception e){
+                //Log.d("Exception connecting: " , e.getMessage());
+                return  new String( "Exception while connecting: " + e.getMessage( ) );
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if(s.equals("1")){
+                //Log.d("Query Success: ", s);
+                Intent intent = new Intent(appContext, AppointmentActivity.class);
+                appContext.startActivity(intent);
             }
         }
     }
