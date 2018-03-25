@@ -94,8 +94,6 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
         mViewHolder.tvStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //int pos = list.get(position);
-
                 dataTransferInterface.clickHyperlink(list.get(position), job);
             }
         });

@@ -156,8 +156,11 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                     new android.os.Handler().postDelayed(new Runnable() {
                         public void run() {
                             //send to database
+                            String id = myApplication.getSavedValue("Id");
+                            RequestHandler requestHandler = new RequestHandler();
+                            requestHandler.execute("Accept", String.valueOf(data.getCus_id()), id );
                             //refresh this page
-                            Toast.makeText(appContext, "Notification Sent...", Toast.LENGTH_LONG).show();
+                            Toast.makeText(appContext, "Request accepted...", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                         }
                     }, 1000);
@@ -179,13 +182,10 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                                     String id = myApplication.getSavedValue("Id");
                                     RequestHandler requestHandler = new RequestHandler();
                                     requestHandler.execute("Reject", String.valueOf(data.getCus_id()), id );
-                                            //GetAppointment appointment = new GetAppointment();
-                                    //appointment.execute(key, id);
-                                    //refresh this page
                                     Toast.makeText(appContext, "Request rejected...", Toast.LENGTH_LONG).show();
                                     progressDialog.dismiss();
                                 }
-                            }, 1000);
+                            }, 1500);
                         }
                     });
 
@@ -286,17 +286,13 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                 URLConnection conn = url.openConnection( );
                 conn.setDoOutput( true );
 
-                switch (args[0]){
-                    case "Reject":
-                        data = URLEncoder.encode( "key", "UTF-8" ) + "=";
-                        data += URLEncoder.encode( args[0],   "UTF-8" ) + "&";
-                        data += URLEncoder.encode( "from", "UTF-8" ) + "=";
-                        data += URLEncoder.encode( args[1],   "UTF-8" ) + "&";
-                        data += URLEncoder.encode( "to", "UTF-8" ) + "=";
-                        data += URLEncoder.encode( args[2],   "UTF-8" );
+                data = URLEncoder.encode( "key", "UTF-8" ) + "=";
+                data += URLEncoder.encode( args[0],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "from", "UTF-8" ) + "=";
+                data += URLEncoder.encode( args[1],   "UTF-8" ) + "&";
+                data += URLEncoder.encode( "to", "UTF-8" ) + "=";
+                data += URLEncoder.encode( args[2],   "UTF-8" );
 
-                    case "Accept":
-                }
 
                 OutputStreamWriter wr = new OutputStreamWriter(
                         conn.getOutputStream( ) );
@@ -319,7 +315,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             }
         }
 
-        @Override
+       @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if(s.equals("1")){
