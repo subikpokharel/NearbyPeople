@@ -106,7 +106,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         if (location != null){
             onLocationChanged(location);
         }
-        locationManager.requestLocationUpdates(provider, 200000, 0, this);
+        locationManager.requestLocationUpdates(provider, 500000, 0, this);
 
 
 
@@ -148,7 +148,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         LatLng point = new LatLng( mLatitude, mLongitude );
         if (i == 1)
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLng( point ) );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 15 ));
+        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 14 ));
 
         new RequestHandler().execute("Track", friend_id, my_id);
         new DatabaseCustomer(getApplicationContext(), null).execute("insertLatLong", String.valueOf(mLatitude),
@@ -159,12 +159,12 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Do something after 1s = 1000ms
+                // Do something after 2s = 2000ms
 
                 LatLng friends_point = new LatLng(Double.parseDouble(from.get(1)), Double.parseDouble(from.get(2)));
                 drawMarker(friends_point, "Friend");
             }
-        }, 1500);
+        }, 2000);
     }
 
     private void drawMarker(LatLng point, String key) {
@@ -411,9 +411,9 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                     color = false;
                 }
             }  // End of outer for
-
-            // Drawing polyline in the Google Map for the i-th route
-            mGoogleMap.addPolyline( lineOptions );
+            if (lineOptions != null)
+                // Drawing polyline in the Google Map for the i-th route
+                mGoogleMap.addPolyline( lineOptions );
         }  // End of onPostExecute
 
     }  // End of ParserTask

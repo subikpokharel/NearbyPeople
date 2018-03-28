@@ -195,7 +195,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             //send to tracking page with details of appointments
             //String id = myApplication.getSavedValue("Id");
 
-            Intent intent = new Intent(appContext, TrackActivity.class);
+            Intent intent = new Intent(appContext, CafeActivity.class);
             intent.putExtra("destination", data.toString());
             intent.putExtra("friendId", String.valueOf(data.getCus_id()));
             appContext.startActivity(intent);

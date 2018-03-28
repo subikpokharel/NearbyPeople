@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
-        editEmail.setText("sami@und.edu");
+        //editEmail.setText("sami@und.edu");
     }
 
     private void init() {

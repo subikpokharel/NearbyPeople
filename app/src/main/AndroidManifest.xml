@@ -43,8 +43,10 @@
         <activity
             android:name=".AppointmentActivity"
             android:noHistory="true" />
-        <activity android:name=".TrackActivity"
-            android:noHistory="true"/>
+        <activity
+            android:name=".TrackActivity"
+            android:noHistory="true" />
+        <activity android:name=".CafeActivity"></activity>
     </application>
 
 </manifest>
