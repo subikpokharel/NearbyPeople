@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -69,7 +70,7 @@ public class CafeActivity extends AppCompatActivity {
         String sensor = "sensor=true";
         // Building the parameters to the web service
         //String parameters = "location=" + latitude + "," + longitude + "&radius=500&type=food&name=cruise&key=" + API_Key;
-        String parameters = "location=" + lat + "," + lng + "&radius=00&type=cafe"+"&"+sensor+"&key=" + Web_Key;
+        String parameters = "location=" + lat + "," + lng + "&radius=500&type=cafe"+"&"+sensor+"&key=" + Web_Key;
         // Output format
         String output = "json";
         // Building the URL for the web serviceString
@@ -170,7 +171,10 @@ public class CafeActivity extends AppCompatActivity {
                 HashMap<String, String> googlePlace = cafeNearby.get(i);
                 double lat = Double.parseDouble(googlePlace.get("lat"));
                 double lng = Double.parseDouble(googlePlace.get("lng"));
-                LatLng position = new LatLng(lat, lng);
+                //LatLng position = new LatLng(lat, lng);
+                Location temp = new Location(LocationManager.GPS_PROVIDER);
+                temp.setLatitude(lat);
+                temp.setLongitude(lng);
                 double dLat = Math.toRadians(Double.parseDouble(destination[0]) - lat);
                 double dLon = Math.toRadians(Double.parseDouble(destination[1]) - lng);
                 double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
@@ -179,7 +183,8 @@ public class CafeActivity extends AppCompatActivity {
                         * Math.sin(dLon / 2);
                 double c = 2 * Math.asin(Math.sqrt(a));
                 double valueResult = Radius * c;
-                distance.put(String.valueOf(position),valueResult);
+                String str_pos = Location.convert(temp.getLatitude(), Location.FORMAT_DEGREES) + "," + Location.convert(temp.getLongitude(), Location.FORMAT_DEGREES);
+                distance.put(String.valueOf(str_pos),valueResult);
                 Log.i("Radius Value", "" + valueResult + "   KM  ");
             }
             ValueComparator bvc = new ValueComparator(distance);
@@ -189,8 +194,8 @@ public class CafeActivity extends AppCompatActivity {
             Log.i("Sorted Value", "" + Arrays.asList(sorted_map) );
 
             boolean value = sorted_map.isEmpty();
-            Log.i("Empty?? ", String.valueOf(value));
-            String key =  null;
+            //Log.i("Empty?? ", String.valueOf(value));
+            String key =  "null";
             if (!value)
                 key = sorted_map.keySet().toArray()[0].toString();
             //Log.i("First element", key);

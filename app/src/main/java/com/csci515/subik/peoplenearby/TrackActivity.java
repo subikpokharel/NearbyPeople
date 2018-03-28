@@ -50,11 +50,12 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     String[] destination = null;
     static ArrayList<String> from = new ArrayList<>();
     static ArrayList<String> to = new ArrayList<>();
-    static boolean color = false;
+    static boolean color = false, cafe = false;
     GoogleMap mGoogleMap;
     //RequestHandler requestHandler = new RequestHandler();
     String friend_id = null;
     String my_id = null;
+    LatLng dest_location = null;
     int i = 0;
 
     @Override
@@ -68,6 +69,9 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         destination = dest.split("/");
         MyApplication myApplication = (MyApplication) getApplication();
         my_id = myApplication.getSavedValue("Id");
+        String isavailableCafe = intent.getStringExtra("cafe");
+        //Toast.makeText(this, intent.getStringExtra("cafe"),Toast.LENGTH_LONG).show();
+        //Log.i("LatLng: ", isavailableCafe);
         new RequestHandler().execute("Track", friend_id, my_id);
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if (status != ConnectionResult.SUCCESS){
@@ -77,18 +81,23 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             finish();
         }
 
-        /*final ProgressDialog progressDialog = new ProgressDialog(TrackActivity.this, R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Fetching Data...");
-        progressDialog.show();
-        new android.os.Handler().postDelayed(new Runnable() {
-            public void run() {
-                progressDialog.dismiss();
-            }
-        }, 1000);*/
+        if (isavailableCafe.equals("null")) {
+            dest_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+        }
+        else{
+            String[] temp = isavailableCafe.split(",");
+            dest_location = new LatLng(Double.parseDouble(temp[0]), Double.parseDouble(temp[1]));
+            final LatLng cafeto_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Do something after 3s = 3000ms
+                    drawMarker(cafeto_location, "cafe");
+                }
+            }, 3000);
 
-        //parseJson(json_people);
-        LatLng dest_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+        }
 
 
 
@@ -171,6 +180,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(point);
+        LatLng dest = dest_location;
         if (key.equals("Destination")){
             markerOptions.title(destination[2]);
             markerOptions.snippet(destination[3]);
@@ -181,9 +191,9 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 
             //LatLng origin = point;
-            LatLng dest = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+            //LatLng dest = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
 
-            color = true;
+            color = false;
             /// Building the URL including Google Directions API
             String url = getDirectionsUrl( point, dest );
             Log.d("Url: ", url);
@@ -192,20 +202,24 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             downloadTask.execute( url );
         }else if (key.equals("Me")){
             //LatLng origin = point;
-            LatLng dest = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
-
+            //LatLng dest = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+            color = true;
             /// Building the URL including Google Directions API
             String url = getDirectionsUrl( point, dest );
             Log.d("Url: ", url);
             DownloadTask downloadTask = new DownloadTask( );
             // Start downloading JSON data from Google Directions API.
             downloadTask.execute( url );
+        }else if (key.equals("cafe")){
+            markerOptions.title("Meeting Point");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            String url = getDirectionsUrl( point, dest );
+            Log.d("Url: ", url);
+            cafe = true;
+            DownloadTask downloadTask = new DownloadTask( );
+            // Start downloading JSON data from Google Directions API.
+            downloadTask.execute( url );
         }
-
-
-
-
-
         mGoogleMap.addMarker(markerOptions);
     }
 
@@ -404,12 +418,18 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll( points );
                 lineOptions.width( 2 );
-                if (!color)
-                    lineOptions.color( Color.BLUE );
-                else {
-                    lineOptions.color(Color.RED);
-                    color = false;
+                if (!cafe){
+                    if (!color)
+                        lineOptions.color( Color.BLUE );
+                    else {
+                        lineOptions.color(Color.RED);
+                        color = false;
+                    }
+                }else{
+                    lineOptions.color(Color.DKGRAY);
+                    cafe = false;
                 }
+
             }  // End of outer for
             if (lineOptions != null)
                 // Drawing polyline in the Google Map for the i-th route
