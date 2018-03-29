@@ -98,10 +98,10 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    // Do something after 3s = 3000ms
+                    // Do something after 1s = 1000ms
                     drawMarker(cafeto_location, "cafe");
                 }
-            }, 3000);
+            }, 1000);
 
         }
         else
@@ -114,6 +114,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.trackMap);
         mGoogleMap = supportMapFragment.getMap();
         mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, true);
@@ -136,12 +137,14 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             //from.clear();
             JSONObject jsonRootObj = new JSONObject(json_people);
             JSONArray data = jsonRootObj.getJSONArray("location");
-            if (data.length()>0){
+            /*if (data.length()>0){
                 from.clear();
                 to.clear();
-            }
+            }*/
             for (int i = 0; i < data.length(); i++) {
 
+                from.clear();
+                to.clear();
                 JSONObject jsonObject = data.getJSONObject(i);
 
                 String from_name = jsonObject.optString("Fname");
@@ -187,7 +190,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 LatLng friends_point = new LatLng(Double.parseDouble(from.get(1)), Double.parseDouble(from.get(2)));
                 drawMarker(friends_point, "Friend");
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void drawMarker(LatLng point, String key) {
@@ -448,7 +451,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                         color = false;
                     }
                 }else{
-                    lineOptions.color(Color.GREEN);
+                    lineOptions.color(Color.MAGENTA);
                     cafe = false;
                 }
 

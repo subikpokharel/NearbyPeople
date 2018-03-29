@@ -95,6 +95,12 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
         mGoogleMap = supportMapFragment.getMap();
         // Enables MyLocation Button in the Map.
         mGoogleMap.setMyLocationEnabled(true);
+
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
+        mGoogleMap.getUiSettings().setRotateGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setScrollGesturesEnabled(false);
+        mGoogleMap.getUiSettings().setTiltGesturesEnabled(false);
+
         // Getting LocationManager object from System Service LOCATION_SERVICE
         LocationManager locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
         // Creating a criteria object to retrieve provider

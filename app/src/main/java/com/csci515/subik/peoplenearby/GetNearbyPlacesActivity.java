@@ -88,7 +88,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.placesMap);
         mGoogleMap = supportMapFragment.getMap();
         mGoogleMap.setMyLocationEnabled(true);
-
+        mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
         // Use the LocationManager class to obtain GPS locations.
         LocationManager locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
         Criteria criteria = new Criteria();
