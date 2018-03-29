@@ -178,7 +178,7 @@ public class CafeActivity extends AppCompatActivity {
                 double valueResult = Radius * c;
                 String str_pos = Location.convert(temp.getLatitude(), Location.FORMAT_DEGREES) + "," + Location.convert(temp.getLongitude(), Location.FORMAT_DEGREES);
                 distance.put(String.valueOf(str_pos),valueResult);
-                Log.i("Radius Value", "" + valueResult + "   KM  ");
+                //Log.i("Radius Value", "" + valueResult + "   KM  ");
             }
             ValueComparator bvc = new ValueComparator(distance);
             TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
