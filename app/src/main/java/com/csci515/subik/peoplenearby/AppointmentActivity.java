@@ -195,6 +195,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             //send to tracking page with details of appointments
             //String id = myApplication.getSavedValue("Id");
 
+            Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(appContext, CafeActivity.class);
             intent.putExtra("destination", data.toString());
             intent.putExtra("friendId", String.valueOf(data.getCus_id()));
@@ -203,7 +204,6 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
 
             //RequestHandler requestHandler = new RequestHandler();
             //requestHandler.execute("Track", String.valueOf(data.getCus_id()), id, data.toString());
-            //Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(getApplicationContext(),"Waiting for: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
         }

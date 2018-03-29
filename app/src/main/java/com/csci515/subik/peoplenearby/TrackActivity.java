@@ -57,7 +57,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     String my_id = null;
     LatLng dest_location = null;
     int i = 0;
-    static LatLng cafeto_location;
+    LatLng cafeto_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) throws SecurityException {
@@ -71,8 +71,16 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         MyApplication myApplication = (MyApplication) getApplication();
         my_id = myApplication.getSavedValue("Id");
         String isavailableCafe = intent.getStringExtra("cafe");
-        //Toast.makeText(this, intent.getStringExtra("cafe"),Toast.LENGTH_LONG).show();
-        Log.i("LatLng of cafe: ", isavailableCafe);
+        //Toast.makeText(this, friend_id,Toast.LENGTH_LONG).show();
+        //Log.i("LatLng of cafe: ", isavailableCafe);
+        /*final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 1s = 1000ms
+                new RequestHandler().execute("Track", friend_id, my_id);
+            }
+        }, 1000);*/
         new RequestHandler().execute("Track", friend_id, my_id);
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if (status != ConnectionResult.SUCCESS){
@@ -125,8 +133,13 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     public static void parseJson(String json_people) {
         try {
 
+            //from.clear();
             JSONObject jsonRootObj = new JSONObject(json_people);
             JSONArray data = jsonRootObj.getJSONArray("location");
+            if (data.length()>0){
+                from.clear();
+                to.clear();
+            }
             for (int i = 0; i < data.length(); i++) {
 
                 JSONObject jsonObject = data.getJSONObject(i);
@@ -174,7 +187,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 LatLng friends_point = new LatLng(Double.parseDouble(from.get(1)), Double.parseDouble(from.get(2)));
                 drawMarker(friends_point, "Friend");
             }
-        }, 2000);
+        }, 3000);
     }
 
     private void drawMarker(LatLng point, String key) {
@@ -268,7 +281,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 data += URLEncoder.encode("to", "UTF-8") + "=";
                 data += URLEncoder.encode(args[2], "UTF-8");
 
-
+                Log.i("Data to database", args[1]);
                 OutputStreamWriter wr = new OutputStreamWriter(
                         conn.getOutputStream());
                 wr.write(data);
