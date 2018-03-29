@@ -53,11 +53,8 @@ public class CafeActivity extends AppCompatActivity {
         friend_id = intent.getStringExtra("friendId");
         dest = intent.getStringExtra("destination");
         destination = dest.split("/");
-        /*double lat = Double.parseDouble(destination[0]);
-        double lng = Double.parseDouble(destination[1]);*/
-        //LatLng dest_lat_lng = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
         String url = getPlacesUrl(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
-        Log.d("Cafe Url: ", url);
+        //Log.d("Cafe Url: ", url);
         CafeActivity.DownloadTask downloadTask = new CafeActivity.DownloadTask( );
         // Start downloading JSON data from Google Directions API.
         downloadTask.execute( url );
@@ -69,12 +66,10 @@ public class CafeActivity extends AppCompatActivity {
         // Sensor enabled
         String sensor = "sensor=true";
         // Building the parameters to the web service
-        //String parameters = "location=" + latitude + "," + longitude + "&radius=500&type=food&name=cruise&key=" + API_Key;
-        String parameters = "location=" + lat + "," + lng + "&radius=500&type=cafe"+"&"+sensor+"&key=" + Web_Key;
+        String parameters = "location=" + lat + "," + lng + "&radius=3000&type=cafe"+"&"+sensor+"&key=" + Web_Key;
         // Output format
         String output = "json";
         // Building the URL for the web serviceString
-
         return "https://maps.googleapis.com/maps/api/place/nearbysearch/" + output + "?" + parameters;
     }
 
@@ -163,7 +158,6 @@ public class CafeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<HashMap<String, String>> cafeNearby) {
             super.onPostExecute(cafeNearby);
-            //ArrayList<String> distance = new ArrayList<>();
             HashMap<String, Double> distance = new HashMap<>();
             for (int i = 0; i < cafeNearby.size(); i++) {
 
@@ -171,7 +165,6 @@ public class CafeActivity extends AppCompatActivity {
                 HashMap<String, String> googlePlace = cafeNearby.get(i);
                 double lat = Double.parseDouble(googlePlace.get("lat"));
                 double lng = Double.parseDouble(googlePlace.get("lng"));
-                //LatLng position = new LatLng(lat, lng);
                 Location temp = new Location(LocationManager.GPS_PROVIDER);
                 temp.setLatitude(lat);
                 temp.setLongitude(lng);
@@ -190,11 +183,10 @@ public class CafeActivity extends AppCompatActivity {
             ValueComparator bvc = new ValueComparator(distance);
             TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
             sorted_map.putAll(distance);
-            Log.i("First Value", "" + Arrays.asList(distance) );
-            Log.i("Sorted Value", "" + Arrays.asList(sorted_map) );
+            /*Log.i("First Value", "" + Arrays.asList(distance) );
+            Log.i("Sorted Value", "" + Arrays.asList(sorted_map) );*/
 
             boolean value = sorted_map.isEmpty();
-            //Log.i("Empty?? ", String.valueOf(value));
             String key =  "null";
             if (!value)
                 key = sorted_map.keySet().toArray()[0].toString();
@@ -205,14 +197,6 @@ public class CafeActivity extends AppCompatActivity {
             intent.putExtra("friendId", friend_id);
             intent.putExtra("cafe", key);
             mContext.startActivity(intent);
-
-            //sorted_map.firstKey()
-            /*String key = sorted_map.firstKey();
-            Double value = sorted_map.get()
-            Log.i("First element",)*/
-
-            /*Log.i("First Value", "" + Arrays.asList(distance) );
-            Log.i("Second Value", "" + Collections.singletonList(distance) );*/
 
         }
 
@@ -237,4 +221,3 @@ public class CafeActivity extends AppCompatActivity {
 
     }    // End of ParserTask
 }
-//[{lat/lng: (47.9120142,-97.0907593)=0.33285008964224927, lat/lng: (47.913926,-97.087469)=0.4318569223570965}]

@@ -57,6 +57,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     String my_id = null;
     LatLng dest_location = null;
     int i = 0;
+    static LatLng cafeto_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) throws SecurityException {
@@ -71,7 +72,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         my_id = myApplication.getSavedValue("Id");
         String isavailableCafe = intent.getStringExtra("cafe");
         //Toast.makeText(this, intent.getStringExtra("cafe"),Toast.LENGTH_LONG).show();
-        //Log.i("LatLng: ", isavailableCafe);
+        Log.i("LatLng of cafe: ", isavailableCafe);
         new RequestHandler().execute("Track", friend_id, my_id);
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if (status != ConnectionResult.SUCCESS){
@@ -81,13 +82,10 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             finish();
         }
 
-        if (isavailableCafe.equals("null")) {
-            dest_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
-        }
-        else{
+        if (!isavailableCafe.equals("null")) {
             String[] temp = isavailableCafe.split(",");
             dest_location = new LatLng(Double.parseDouble(temp[0]), Double.parseDouble(temp[1]));
-            final LatLng cafeto_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
+            cafeto_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -98,8 +96,11 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             }, 3000);
 
         }
+        else
+            dest_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
 
 
+        Log.i("LatLng of set program: ", dest_location.toString());
 
 
         SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.trackMap);
@@ -180,7 +181,8 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(point);
-        LatLng dest = dest_location;
+        //LatLng dest = dest_location;
+        LatLng dest = cafeto_location;
         if (key.equals("Destination")){
             markerOptions.title(destination[2]);
             markerOptions.snippet(destination[3]);
@@ -196,7 +198,9 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             color = false;
             /// Building the URL including Google Directions API
             String url = getDirectionsUrl( point, dest );
-            Log.d("Url: ", url);
+            //Log.d("Url: ", url);
+            Log.d("Point Friend: ", point.toString());
+            Log.d("Point Friend Dest: ", dest.toString());
             DownloadTask downloadTask = new DownloadTask( );
             // Start downloading JSON data from Google Directions API.
             downloadTask.execute( url );
@@ -206,15 +210,20 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             color = true;
             /// Building the URL including Google Directions API
             String url = getDirectionsUrl( point, dest );
-            Log.d("Url: ", url);
+            //Log.d("Url: ", url);
+            Log.d("Point Me: ", point.toString());
+            Log.d("Point Me Dest: ", dest.toString());
             DownloadTask downloadTask = new DownloadTask( );
             // Start downloading JSON data from Google Directions API.
             downloadTask.execute( url );
         }else if (key.equals("cafe")){
             markerOptions.title("Meeting Point");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-            String url = getDirectionsUrl( point, dest );
-            Log.d("Url: ", url);
+            //String url = getDirectionsUrl( point, dest );
+            String url = getDirectionsUrl( dest_location, dest );
+            //Log.d("Url: ", url);
+            Log.d("Point Final: ", point.toString());
+            Log.d("Point Cafe: ", dest.toString());
             cafe = true;
             DownloadTask downloadTask = new DownloadTask( );
             // Start downloading JSON data from Google Directions API.
@@ -426,7 +435,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                         color = false;
                     }
                 }else{
-                    lineOptions.color(Color.DKGRAY);
+                    lineOptions.color(Color.GREEN);
                     cafe = false;
                 }
 
