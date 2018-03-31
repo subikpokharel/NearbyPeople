@@ -140,7 +140,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
     @Override
     public void clickHyperlink(final Appointment data, String job) {
         /*Toast.makeText(getApplicationContext(), job, Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), String.valueOf(cus_id), Toast.LENGTH_LONG).show();*/
+        Toast.makeText(getApplicationContext(), String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();*/
         if (job.equals("view")){
             AlertDialog.Builder builder = new AlertDialog.Builder(appContext);
             builder.setTitle("Accept/Reject Request");
@@ -195,7 +195,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             //send to tracking page with details of appointments
             //String id = myApplication.getSavedValue("Id");
 
-            Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(),"Where is: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(appContext, CafeActivity.class);
             intent.putExtra("destination", data.toString());
             intent.putExtra("friendId", String.valueOf(data.getCus_id()));
@@ -205,7 +205,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
             //RequestHandler requestHandler = new RequestHandler();
             //requestHandler.execute("Track", String.valueOf(data.getCus_id()), id, data.toString());
         }else{
-            Toast.makeText(getApplicationContext(),"Waiting for: "+ String.valueOf(data.getCus_id()), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Waiting for the response", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -260,6 +260,7 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                     super.onPostExecute(result);
                     JSONObject jsonRootObj = new JSONObject(result);
                     JSONArray data = jsonRootObj.getJSONArray("details");
+                    appointments.clear();
                     appointments = new ArrayList<>(data.length());
                     //Log.d("Data length: ", String.valueOf(data.length()));
                     for (int i = 0; i < data.length(); i++) {
@@ -341,16 +342,6 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                Intent intent = new Intent(appContext, AppointmentActivity.class);
                appContext.startActivity(intent);
            }
-            /*if (status.equals("Track")){
-                //Appointment appointment = app;
-                Intent intent = new Intent(appContext, TrackActivity.class);
-                intent.putExtra("JsonData", s);
-                intent.putExtra("destination", app);
-                appContext.startActivity(intent);
-            }else{
-
-            }*/
-
         }
     }
 }

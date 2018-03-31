@@ -68,12 +68,14 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
             mViewHolder.tvFName.setText(String.format("To: %s",appointment.getTo_name()));
             if (appointment.getStatus() == 0){
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.pending));
-                job = "pending";
+                mViewHolder.statusJob.setText("pending");
+                //job = "pending";
             }else{
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
-                job = "track";
+                mViewHolder.statusJob.setText("track");
+                //job = "track";
             }
         }else{
             mViewHolder.tvFName.setText(String.format("From: %s",appointment.getFrom_name()));
@@ -81,19 +83,23 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.acceptReject));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAcceptReject));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
-                job = "view";
+                mViewHolder.statusJob.setText("view");
+                //job = "view";
             }
             else {
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
-                job = "track";
+                mViewHolder.statusJob.setText("pending");
+                //job = "track";
             }
         }
 
         mViewHolder.tvStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                job = mViewHolder.statusJob.getText().toString();
+                //job = list.get(position).
                 dataTransferInterface.clickHyperlink(list.get(position), job);
             }
         });
@@ -102,7 +108,7 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
     }
 
     private static class ViewHolder{
-        private TextView tvId, tvFName, tvTime, tvResturant, tvAddress, tvStatus;
+        private TextView tvId, tvFName, tvTime, tvResturant, tvAddress, tvStatus, statusJob;
 
         private ViewHolder(View view){
             tvId = view.findViewById(R.id.tvCusId);
@@ -111,6 +117,7 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
             tvResturant = view.findViewById(R.id.tvResName);
             tvAddress = view.findViewById(R.id.tvResAddress);
             tvStatus = view.findViewById(R.id.tvStatus);
+            statusJob = view.findViewById(R.id.statusJob);
 
         }
     }
