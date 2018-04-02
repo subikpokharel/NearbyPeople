@@ -125,7 +125,6 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
                 }
             }
         }, 1500);
-
     }
 
     @Override
