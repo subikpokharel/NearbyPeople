@@ -55,8 +55,8 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
     static GoogleMap mGoogleMap;
     static ArrayList<LatLong> mPeoplePosition;
     static ArrayList<Customer> mPeople;
-    double mLatitude  = 0;
-    double mLongitude = 0;
+    static double mLatitude  = 0;
+    static double mLongitude = 0;
     MyApplication myApplication;
     String user_id;
     TextView tv;
@@ -266,7 +266,9 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 }
 
                 mGoogleMap.addMarker(markerOptions);
-
+                /*mGoogleMap.moveCamera( CameraUpdateFactory.newLatLng(new LatLng(mLatitude, mLongitude)));
+                mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+*/
                 mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener()
                 {
 
@@ -323,6 +325,7 @@ public class HomePageActivity extends FragmentActivity implements LocationListen
                 });
                 //Log.d("LATLANG: ", String.valueOf(lat)+" "+String.valueOf(lng));
             }
+
         }
     }
 }

@@ -45,6 +45,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
     GoogleMap mGoogleMap;
     Context context;
     String[] data;
+    LatLng myLocation = null;
     static String name, gender, age, cus_id;
     static double destination_lat, destination_long;
     Button btnAppointment;
@@ -98,6 +99,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
         Location location = locationManager.getLastKnownLocation(bestProvider);
 
         if (location != null){
+            myLocation = new LatLng(location.getLatitude(),location.getLongitude());
             // Building the URL including Google Directions API
             String url = getPlacesUrl(location);
             //Log.d("URL: ", url);
@@ -287,6 +289,8 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
                     }
                 });
             }
+            /*mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(14));*/
         }  // End of onPostExecute
     }    // End of ParserTask
 
