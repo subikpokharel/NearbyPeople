@@ -90,7 +90,7 @@ public class AppointmentAdapter extends ArrayAdapter<Appointment> {
                 mViewHolder.tvStatus.setText(mContext.getResources().getString(R.string.trackFriend));
                 mViewHolder.tvStatus.setTextColor(mContext.getResources().getColor(R.color.colorAccepted));
                 dataTransferInterface.makeHyperlink(mViewHolder.tvStatus);
-                mViewHolder.statusJob.setText("pending");
+                mViewHolder.statusJob.setText("track");
                 //job = "track";
             }
         }
