@@ -57,6 +57,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     String my_id = null;
     LatLng dest_location = null;
     int i = 0;
+    static  int count = 0;
     LatLng cafeto_location;
 
     @Override
@@ -174,6 +175,8 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 String.valueOf(mLongitude),my_id);
 
         drawMarker(point, "Me");
+        drawMarker(dest_location, "Destination");
+        drawMarker(cafeto_location, "cafe");
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -182,8 +185,6 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
 
                 LatLng friends_point = new LatLng(Double.parseDouble(from.get(1)), Double.parseDouble(from.get(2)));
                 drawMarker(friends_point, "Friend");
-                drawMarker(cafeto_location, "cafe");
-                drawMarker(dest_location, "Destination");
             }
         }, 2000);
     }
@@ -447,6 +448,8 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                         color = false;
                     }
                 }else{
+                    /*lineOptions.color(Color.MAGENTA);
+                    cafe = false;*/
                     if (!color) {
                         lineOptions.color(Color.MAGENTA);
                         cafe = false;
