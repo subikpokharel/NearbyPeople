@@ -115,7 +115,7 @@ public class GetNearbyPlacesActivity extends AppCompatActivity {
         String sensor = "sensor=true";
         // Building the parameters to the web service
         //String parameters = "location=" + latitude + "," + longitude + "&radius=500&type=food&name=cruise&key=" + API_Key;
-        String parameters = "location=" + location.getLatitude() + "," + location.getLongitude() + "&radius=5000&type=resturant"+"&"+sensor+"&key=" + Web_Key;
+        String parameters = "location=" + location.getLatitude() + "," + location.getLongitude() + "&radius=10000&type=restaurant"+"&"+sensor+"&key=" + Web_Key;
         // Output format
         String output = "json";
         // Building the URL for the web serviceString

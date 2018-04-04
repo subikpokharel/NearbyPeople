@@ -446,13 +446,17 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
                 if (!cafe){
                     if (!color)
                         lineOptions.color( Color.BLUE );
+
                     else {
                         lineOptions.color(Color.RED);
                         color = false;
                     }
                 }else{
-                    lineOptions.color(Color.MAGENTA);
-                    cafe = false;
+                    if (!color) {
+                        lineOptions.color(Color.MAGENTA);
+                        cafe = false;
+                    }else
+                        lineOptions.color(Color.GRAY);
                 }
 
             }  // End of outer for

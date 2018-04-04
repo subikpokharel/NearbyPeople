@@ -343,4 +343,12 @@ public class AppointmentActivity extends AppCompatActivity implements Appointmen
            }
         }
     }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent(appContext, HomePageActivity.class);
+        appContext.startActivity(intent);
+    }
 }
