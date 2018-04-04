@@ -71,16 +71,7 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         MyApplication myApplication = (MyApplication) getApplication();
         my_id = myApplication.getSavedValue("Id");
         String isavailableCafe = intent.getStringExtra("cafe");
-        //Toast.makeText(this, friend_id,Toast.LENGTH_LONG).show();
-        //Log.i("LatLng of cafe: ", isavailableCafe);
-        /*final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Do something after 1s = 1000ms
-                new RequestHandler().execute("Track", friend_id, my_id);
-            }
-        }, 1000);*/
+
         new RequestHandler().execute("Track", friend_id, my_id);
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if (status != ConnectionResult.SUCCESS){
@@ -94,14 +85,14 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
             String[] temp = isavailableCafe.split(",");
             dest_location = new LatLng(Double.parseDouble(temp[0]), Double.parseDouble(temp[1]));
             cafeto_location = new LatLng(Double.parseDouble(destination[0]), Double.parseDouble(destination[1]));
-            final Handler handler = new Handler();
+            /*final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // Do something after 1s = 1000ms
                     drawMarker(cafeto_location, "cafe");
                 }
-            }, 1000);
+            }, 1000);*/
 
         }
         else
@@ -120,12 +111,12 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
         String provider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(provider);
 
-        drawMarker(dest_location, "Destination");
+        //drawMarker(dest_location, "Destination");
 
         if (location != null){
             onLocationChanged(location);
         }
-        locationManager.requestLocationUpdates(provider, 500000, 0, this);
+        locationManager.requestLocationUpdates(provider, 20000, 0, this);
 
 
 
@@ -169,12 +160,14 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
     public void onLocationChanged(Location location) {
 
         i++;
+        mGoogleMap.clear();
         double mLatitude = location.getLatitude();
         double mLongitude = location.getLongitude();
         LatLng point = new LatLng( mLatitude, mLongitude );
-        if (i == 1)
-            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLng( point ) );
-        mGoogleMap.animateCamera( CameraUpdateFactory.zoomTo( 14 ));
+        if (i == 1) {
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        }
 
         new RequestHandler().execute("Track", friend_id, my_id);
         new DatabaseCustomer(getApplicationContext(), null).execute("insertLatLong", String.valueOf(mLatitude),
@@ -189,6 +182,8 @@ public class TrackActivity extends FragmentActivity implements LocationListener 
 
                 LatLng friends_point = new LatLng(Double.parseDouble(from.get(1)), Double.parseDouble(from.get(2)));
                 drawMarker(friends_point, "Friend");
+                drawMarker(cafeto_location, "cafe");
+                drawMarker(dest_location, "Destination");
             }
         }, 2000);
     }
